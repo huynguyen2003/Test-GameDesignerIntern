@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tiles Hop - Halloween Beat & Treat Event Hub</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts: Inter & Orbitron -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            orbitron: ['Orbitron', 'sans-serif'],
+          },
+          colors: {
+            spooky: {
+              bg: '#090514',
+              card: '#150b28',
+              border: '#3b1764',
+              orange: '#f97316',
+              purple: '#a855f7',
+              cyan: '#06b6d4',
+              green: '#22c55e',
+              pink: '#ec4899',
+            }
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 2s infinite',
+            'float-slow': 'float 4s ease-in-out infinite',
+            'ghost-float': 'ghostFloat 3s ease-in-out infinite',
+            'shimmer': 'shimmer 2s linear infinite',
+            'bounce-soft': 'bounceSoft 1.5s infinite',
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 15px rgba(249, 115, 22, 0.6), 0 0 30px rgba(168, 85, 247, 0.4)' },
+              '50%': { boxShadow: '0 0 30px rgba(249, 115, 22, 0.9), 0 0 55px rgba(168, 85, 247, 0.8)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(3deg)' },
+            },
+            ghostFloat: {
+              '0%, 100%': { transform: 'translateY(0px) scale(1)' },
+              '50%': { transform: 'translateY(-8px) scale(1.05)' },
+            },
+            bounceSoft: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #090514; }
+    ::-webkit-scrollbar-thumb { background: #3b1764; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a855f7; }
+
+    /* Glassmorphism styling */
+    .glass-spooky {
+      background: rgba(21, 11, 40, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+    .glass-purple {
+      background: rgba(26, 10, 52, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+
+    /* Text Glows */
+    .neon-orange-text {
+      text-shadow: 0 0 8px rgba(249, 115, 22, 0.8), 0 0 20px rgba(249, 115, 22, 0.5);
+    }
+    .neon-purple-text {
+      text-shadow: 0 0 8px rgba(168, 85, 247, 0.8), 0 0 20px rgba(168, 85, 247, 0.5);
+    }
+
+    /* Grid pattern for spooky background */
+    .spooky-grid-bg {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(168, 85, 247, 0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(168, 85, 247, 0.07) 1px, transparent 1px);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-0 sm:p-4 font-sans select-none antialiased">
+
+  <!-- FRAME TOGGLE FOR DESKTOP VIEWING -->
+  <div class="hidden sm:flex items-center gap-3 mb-3 bg-slate-900 border border-slate-800 px-4 py-1.5 rounded-full text-xs text-slate-400">
+    <span class="font-bold text-orange-400">🔥 DEMO EVENT HUB:</span>
+    <span>Chế độ Khung Điện Thoại Mobile Active</span>
+  </div>
+
+  <!-- MOBILE DEVICE FRAME CONTAINER (375x812 iPhone / Mobile Standard Ratio) -->
+  <div id="device-container" class="relative w-full sm:w-[380px] h-screen sm:h-[820px] bg-spooky-bg border-0 sm:border-[10px] sm:border-slate-800 sm:rounded-[48px] shadow-[0_0_80px_rgba(249,115,22,0.25)] overflow-hidden flex flex-col spooky-grid-bg">
+    
+    <!-- DEVICE NOTCH (DESKTOP ONLY VISIBLE) -->
+    <div class="hidden sm:flex absolute top-0 left-1/2 -translate-x-1/2 w-36 h-6 bg-slate-800 rounded-b-2xl z-50 items-center justify-center">
+      <div class="w-12 h-1 bg-slate-700 rounded-full"></div>
+      <div class="absolute right-4 w-2.5 h-2.5 bg-slate-900 border border-slate-700 rounded-full"></div>
+    </div>
+
+    <!-- MOBILE STATUS BAR -->
+    <div class="pt-2 px-6 pb-1 flex justify-between items-center text-[11px] font-semibold text-slate-400 z-40 bg-slate-950/40">
+      <span>09:41</span>
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-signal"></i>
+        <i class="fa-solid fa-wifi"></i>
+        <i class="fa-solid fa-battery-full text-xs"></i>
+      </div>
+    </div>
+
+    <!-- EVENT HEADER BAR -->
+    <header class="px-4 py-2 flex items-center justify-between z-30 border-b border-purple-900/40 bg-slate-950/80 backdrop-blur-md">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-orange-500/20 border border-orange-500 flex items-center justify-center text-orange-400 animate-ghost-float">
+          <i class="fa-solid fa-ghost text-base"></i>
+        </div>
+        <div>
+          <h1 class="text-xs font-black font-orbitron text-orange-400 neon-orange-text tracking-wider">HALLOWEEN BEAT & TREAT</h1>
+          <p class="text-[9px] font-bold text-purple-300">SỰ KIỆN ĐÊM MA LỰC 7 NGÀY</p>
+        </div>
+      </div>
+
+      <!-- CURRENT CANDY CURRENCY DISPLAY -->
+      <div class="flex items-center gap-1.5 bg-purple-950/90 border border-orange-500/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.3)]">
+        <span class="text-sm">🍬</span>
+        <span id="user-candy-count" class="text-xs font-black font-orbitron text-orange-300">1,250</span>
+      </div>
+    </header>
+
+    <!-- LIVE COUNTDOWN TIMER BANNER -->
+    <div class="bg-gradient-to-r from-purple-950 via-slate-900 to-orange-950 px-4 py-1.5 flex justify-between items-center text-[10px] border-b border-purple-800/30">
+      <div class="flex items-center gap-1.5 text-slate-300 font-semibold">
+        <i class="fa-solid fa-clock text-orange-400 animate-pulse"></i>
+        <span>Kết thúc sau:</span>
+      </div>
+      <div class="font-black font-orbitron text-orange-400 tracking-wider">
+        <span id="cd-days">06</span>D : <span id="cd-hours">23</span>H : <span id="cd-mins">45</span>M : <span id="cd-secs">12</span>S
+      </div>
+    </div>
+
+    <!-- MAIN SCROLLABLE CONTENT AREA -->
+    <main class="flex-1 overflow-y-auto p-3 space-y-3 relative z-20">
+      
+      <!-- ================================================================= -->
+      <!-- TAB 1: EVENT HUB (MAIN VIEW) -->
+      <!-- ================================================================= -->
+      <section id="view-hub" class="space-y-3 transition-all duration-300">
+        
+        <!-- GRAND PRIZE FEATURED CARD (JACK-O'-LANTERN BEATS SKIN) -->
+        <div class="glass-spooky rounded-2xl p-3.5 relative overflow-hidden border border-orange-500/40 shadow-xl">
+          <!-- Background Ambient Glow -->
+          <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-orange-500/20 rounded-full blur-2xl"></div>
+          <div class="absolute -left-8 -top-8 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
+
+          <div class="flex justify-between items-start relative z-10">
+            <div class="space-y-1 max-w-[190px]">
+              <span class="bg-gradient-to-r from-orange-500 to-pink-500 text-black text-[8px] font-black tracking-widest px-2 py-0.5 rounded-full uppercase shadow-md">
+                🎁 PHẦN THƯỞNG TỐI CAO
+              </span>
+              <h2 class="text-base font-black font-orbitron text-white leading-tight mt-1">
+                Jack-O'-Lantern Beats
+              </h2>
+              <p class="text-[10px] text-purple-200/90 leading-normal">
+                Skin bóng Bí Ngô 3D độc quyền + Vệt Lửa Tím Neon khi nảy trên gạch!
+              </p>
+              
+              <!-- PREVIEW BUTTON -->
+              <button onclick="openPreviewModal()" class="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-500/20 border border-orange-400 text-orange-300 text-[10px] font-bold rounded-xl hover:bg-orange-500 hover:text-black transition active:scale-95 shadow-[0_0_12px_rgba(249,115,22,0.4)]">
+                <i class="fa-solid fa-play text-xs"></i> Xem Trước Gameplay 3D
+              </button>
+            </div>
+
+            <!-- 3D PUMPKIN BALL VISUAL -->
+            <div class="relative w-24 h-24 flex items-center justify-center cursor-pointer" onclick="openPreviewModal()">
+              <div class="absolute inset-0 bg-orange-500/30 rounded-full blur-xl animate-pulse"></div>
+              <!-- Pumpkin Ball -->
+              <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-orange-600 via-orange-500 to-yellow-400 border-2 border-orange-200 shadow-[0_0_25px_rgba(249,115,22,0.8)] flex flex-col items-center justify-center relative animate-float-slow">
+                <i class="fa-solid fa-face-grimace text-3xl text-slate-950"></i>
+                <span class="text-[7px] font-black font-orbitron text-slate-900 uppercase tracking-tighter">NEON ED.</span>
+                <!-- Fire particles -->
+                <div class="absolute -bottom-2 -right-1 w-5 h-5 bg-purple-600 rounded-full blur-sm animate-ping"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CANDY MILESTONE PROGRESS BAR -->
+        <div class="glass-purple rounded-2xl p-3.5 space-y-2 border border-purple-500/30">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-black font-orbitron text-purple-200 uppercase">CỘT MỐC TÍCH LŨY KẸO</span>
+            <span class="text-xs font-black font-orbitron text-orange-400"><span id="progress-text">1250</span> / 2000 🍬</span>
+          </div>
+
+          <!-- PROGRESS TRACK -->
+          <div class="w-full h-3.5 bg-slate-900 rounded-full overflow-hidden p-0.5 border border-purple-800/60 relative">
+            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(249,115,22,0.8)]" style="width: 62.5%;"></div>
+          </div>
+
+          <!-- 4 MILESTONE NODES -->
+          <div class="grid grid-cols-4 gap-1 text-center pt-1">
+            <!-- Node 1 (500) -->
+            <div onclick="claimMilestone(1)" class="cursor-pointer group flex flex-col items-center">
+              <div id="node-1" class="w-8 h-8 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center border border-purple-300 shadow-[0_0_8px_rgba(168,85,247,0.6)]">
+                <i class="fa-solid fa-check"></i>
+              </div>
+              <span class="text-[9px] font-bold text-purple-300 mt-1">500</span>
+              <span class="text-[8px] text-slate-400 font-medium">50 Kim Cương</span>
+            </div>
+
+            <!-- Node 2 (1000) - CLAIMABLE NOW -->
+            <div onclick="claimMilestone(2)" class="cursor-pointer group flex flex-col items-center">
+              <div id="node-2" class="w-8 h-8 rounded-full bg-orange-500 text-white text-xs flex items-center justify-center border-2 border-white shadow-[0_0_15px_rgba(249,115,22,0.9)] animate-bounce">
+                <i class="fa-solid fa-gift text-sm"></i>
+              </div>
+              <span class="text-[9px] font-black text-orange-400 mt-1">1,000</span>
+              <span class="text-[8px] text-orange-200 font-bold">Skin Gạch Bia Mộ</span>
+            </div>
+
+            <!-- Node 3 (1500) -->
+            <div onclick="claimMilestone(3)" class="cursor-pointer group flex flex-col items-center">
+              <div id="node-3" class="w-8 h-8 rounded-full bg-slate-800 text-slate-500 text-xs flex items-center justify-center border border-slate-700">
+                <i class="fa-solid fa-ticket"></i>
+              </div>
+              <span class="text-[9px] font-bold text-slate-400 mt-1">1,500</span>
+              <span class="text-[8px] text-slate-400">2x Vé Hồi Sinh</span>
+            </div>
+
+            <!-- Node 4 (2000) -->
+            <div onclick="claimMilestone(4)" class="cursor-pointer group flex flex-col items-center">
+              <div id="node-4" class="w-8 h-8 rounded-full bg-slate-800 text-slate-500 text-xs flex items-center justify-center border border-slate-700">
+                <i class="fa-solid fa-crown text-yellow-500"></i>
+              </div>
+              <span class="text-[9px] font-bold text-slate-400 mt-1">2,000</span>
+              <span class="text-[8px] text-slate-400 font-semibold text-yellow-400">Skin Bí Ngô VIP</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DAILY QUEST LIST (DAU BOOSTER) -->
+        <div class="glass-purple rounded-2xl p-3.5 space-y-2.5 border border-purple-500/30">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-black font-orbitron text-orange-400 uppercase">NHIỆM VỤ HÀNG NGÀY</span>
+            <span class="text-[9px] font-bold text-purple-300">Làm mới sau: 11h 20m</span>
+          </div>
+
+          <!-- Quest 1 -->
+          <div class="bg-slate-900/80 p-2.5 rounded-xl border border-purple-900/50 flex justify-between items-center">
+            <div class="space-y-0.5">
+              <p class="text-xs font-bold text-slate-200">1. Đăng nhập hàng ngày</p>
+              <span class="text-[10px] font-black text-orange-400">+50 Kẹo Ma Quái 🍬</span>
+            </div>
+            <button class="px-3 py-1 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed">
+              ĐÃ NHẬN
+            </button>
+          </div>
+
+          <!-- Quest 2 -->
+          <div class="bg-slate-900/80 p-2.5 rounded-xl border border-purple-900/50 flex justify-between items-center">
+            <div class="space-y-0.5">
+              <p class="text-xs font-bold text-slate-200">2. Hoàn thành 3 bài hát bất kỳ</p>
+              <div class="flex items-center gap-2">
+                <span class="text-[10px] font-black text-orange-400">+100 Kẹo 🍬</span>
+                <span class="text-[10px] font-bold text-purple-300">( Tiến trình: 2/3 )</span>
+              </div>
+            </div>
+            <button id="btn-quest-2" onclick="simulatePlayTrack(100, 'btn-quest-2')" class="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-pink-600 text-white text-[10px] font-black font-orbitron rounded-lg shadow-md hover:brightness-110 active:scale-95 transition">
+              CHƠI NGAY
+            </button>
+          </div>
+
+          <!-- Quest 3 -->
+          <div class="bg-slate-900/80 p-2.5 rounded-xl border border-purple-900/50 flex justify-between items-center">
+            <div class="space-y-0.5">
+              <p class="text-xs font-bold text-slate-200">3. Chơi bài Halloween "Spooky Beat"</p>
+              <span class="text-[10px] font-black text-orange-400">+150 Kẹo 🍬</span>
+            </div>
+            <button id="btn-quest-3" onclick="simulatePlayTrack(150, 'btn-quest-3')" class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-[10px] font-black font-orbitron rounded-lg shadow-md hover:brightness-110 active:scale-95 transition">
+              CHƠI NGAY
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- TAB 2: CANDY EXCHANGE SHOP (CỬA HÀNG ĐỔI KẸO) -->
+      <!-- ================================================================= -->
+      <section id="view-shop" class="hidden space-y-3 transition-all duration-300">
+        <div class="text-center space-y-1">
+          <h2 class="text-sm font-black font-orbitron text-orange-400">CỬA HÀNG ĐỔI KẸO HALLOWEEN</h2>
+          <p class="text-[10px] text-slate-400">Đổi Kẹo Ma Quái lấy các vật phẩm độc quyền giới hạn</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <!-- Item 1 -->
+          <div class="glass-purple rounded-xl p-3 text-center space-y-2 border border-purple-500/30 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 mx-auto rounded-full bg-purple-900/50 border border-purple-400 flex items-center justify-center text-2xl text-yellow-400">
+                💎
+              </div>
+              <h3 class="text-xs font-bold text-white mt-1.5">Túi 100 Kim Cương</h3>
+              <p class="text-[9px] text-slate-400">Dùng mở nhạc mới</p>
+            </div>
+            <button onclick="buyShopItem(200, 'Túi 100 Kim Cương')" class="w-full py-1.5 bg-orange-500 hover:bg-orange-600 text-black text-[10px] font-black font-orbitron rounded-lg transition">
+              ĐỔI 200 🍬
+            </button>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="glass-purple rounded-xl p-3 text-center space-y-2 border border-purple-500/30 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 mx-auto rounded-full bg-purple-900/50 border border-purple-400 flex items-center justify-center text-2xl text-pink-400">
+                🪦
+              </div>
+              <h3 class="text-xs font-bold text-white mt-1.5">Skin Gạch Bia Mộ</h3>
+              <p class="text-[9px] text-slate-400">Hiệu ứng Neon Ma Quái</p>
+            </div>
+            <button onclick="buyShopItem(500, 'Skin Gạch Bia Mộ')" class="w-full py-1.5 bg-orange-500 hover:bg-orange-600 text-black text-[10px] font-black font-orbitron rounded-lg transition">
+              ĐỔI 500 🍬
+            </button>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="glass-purple rounded-xl p-3 text-center space-y-2 border border-purple-500/30 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 mx-auto rounded-full bg-purple-900/50 border border-purple-400 flex items-center justify-center text-2xl text-cyan-400">
+                🎟️
+              </div>
+              <h3 class="text-xs font-bold text-white mt-1.5">Gói 5x Hồi Sinh</h3>
+              <p class="text-[9px] text-slate-400">Giữ combo khi chơi</p>
+            </div>
+            <button onclick="buyShopItem(300, 'Gói 5x Hồi Sinh')" class="w-full py-1.5 bg-orange-500 hover:bg-orange-600 text-black text-[10px] font-black font-orbitron rounded-lg transition">
+              ĐỔI 300 🍬
+            </button>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="glass-purple rounded-xl p-3 text-center space-y-2 border border-purple-500/30 flex flex-col justify-between">
+            <div>
+              <div class="w-12 h-12 mx-auto rounded-full bg-purple-900/50 border border-purple-400 flex items-center justify-center text-2xl">
+                🎵
+              </div>
+              <h3 class="text-xs font-bold text-white mt-1.5">Track "Spooky Night"</h3>
+              <p class="text-[9px] text-slate-400">Bài hát Halloween VIP</p>
+            </div>
+            <button onclick="buyShopItem(600, 'Track Spooky Night')" class="w-full py-1.5 bg-orange-500 hover:bg-orange-600 text-black text-[10px] font-black font-orbitron rounded-lg transition">
+              ĐỔI 600 🍬
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- TAB 3: SOCIAL GIFTING (TẶNG KẸO BẠN BÈ) -->
+      <!-- ================================================================= -->
+      <section id="view-social" class="hidden space-y-3 transition-all duration-300">
+        <div class="text-center space-y-1">
+          <h2 class="text-sm font-black font-orbitron text-purple-300">TẶNG KẸO CHO BẠN BÈ</h2>
+          <p class="text-[10px] text-slate-400">Gửi kẹo nhận lại quà tặng năng lượng mỗi ngày!</p>
+        </div>
+
+        <!-- FRIEND LIST -->
+        <div class="space-y-2">
+          <!-- Friend 1 -->
+          <div class="glass-purple p-2.5 rounded-xl border border-purple-500/30 flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-pink-500/20 border border-pink-400 flex items-center justify-center text-sm font-bold text-pink-300">
+                DJ
+              </div>
+              <div>
+                <p class="text-xs font-bold text-white">DJ_BeatMaster</p>
+                <p class="text-[9px] text-slate-400">Level 42 • Vừa chơi 5 phút trước</p>
+              </div>
+            </div>
+            <button id="gift-btn-1" onclick="sendFriendGift('DJ_BeatMaster', 'gift-btn-1')" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold rounded-lg transition">
+              TẶNG 20 🍬
+            </button>
+          </div>
+
+          <!-- Friend 2 -->
+          <div class="glass-purple p-2.5 rounded-xl border border-purple-500/30 flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-sm font-bold text-cyan-300">
+                EDM
+              </div>
+              <div>
+                <p class="text-xs font-bold text-white">NeonRider_99</p>
+                <p class="text-[9px] text-slate-400">Level 28 • Đang Online</p>
+              </div>
+            </div>
+            <button id="gift-btn-2" onclick="sendFriendGift('NeonRider_99', 'gift-btn-2')" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold rounded-lg transition">
+              TẶNG 20 🍬
+            </button>
+          </div>
+
+          <!-- Friend 3 -->
+          <div class="glass-purple p-2.5 rounded-xl border border-purple-500/30 flex justify-between items-center">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-full bg-orange-500/20 border border-orange-400 flex items-center justify-center text-sm font-bold text-orange-300">
+                HOP
+              </div>
+              <div>
+                <p class="text-xs font-bold text-white">TilesPro_VN</p>
+                <p class="text-[9px] text-slate-400">Level 60 • 1 giờ trước</p>
+              </div>
+            </div>
+            <button id="gift-btn-3" onclick="sendFriendGift('TilesPro_VN', 'gift-btn-3')" class="px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white text-[10px] font-bold rounded-lg transition">
+              TẶNG 20 🍬
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATION POPUP -->
+    <div id="toast-msg" class="absolute bottom-16 left-1/2 -translate-x-1/2 bg-slate-900/95 border border-orange-400/80 text-orange-300 px-4 py-2 rounded-full text-xs font-bold shadow-2xl transition-all duration-300 transform translate-y-12 opacity-0 pointer-events-none z-50 flex items-center gap-2">
+      <i class="fa-solid fa-circle-check text-green-400"></i>
+      <span id="toast-text">Thông báo</span>
+    </div>
+
+    <!-- BOTTOM APP NAVIGATION TABS -->
+    <nav class="bg-slate-950/95 border-t border-purple-900/60 px-4 py-2 flex justify-around items-center z-40 backdrop-blur-md">
+      <button id="tab-hub" onclick="switchMainTab('hub')" class="flex flex-col items-center gap-1 text-orange-400 transition-colors">
+        <i class="fa-solid fa-ghost text-base"></i>
+        <span class="text-[9px] font-bold">Sự Kiện Chính</span>
+      </button>
+
+      <button id="tab-shop" onclick="switchMainTab('shop')" class="flex flex-col items-center gap-1 text-slate-500 hover:text-orange-400 transition-colors">
+        <i class="fa-solid fa-store text-base"></i>
+        <span class="text-[9px] font-bold">Đổi Kẹo</span>
+      </button>
+
+      <button id="tab-social" onclick="switchMainTab('social')" class="flex flex-col items-center gap-1 text-slate-500 hover:text-purple-400 transition-colors">
+        <i class="fa-solid fa-user-group text-base"></i>
+        <span class="text-[9px] font-bold">Tặng Bạn Bè</span>
+      </button>
+    </nav>
+
+    <!-- DEVICE HOME INDICATOR BAR -->
+    <div class="pb-1 pt-0.5 bg-slate-950 flex justify-center">
+      <div class="w-32 h-1 bg-slate-800 rounded-full"></div>
+    </div>
+
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- MODAL: 3D HALLOWEEN GAMEPLAY CANVAS PREVIEW -->
+  <!-- ================================================================= -->
+  <div id="modal-preview" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-3 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-slate-900 border-2 border-orange-500/60 rounded-3xl w-full max-w-sm p-4 text-center space-y-3 relative shadow-[0_0_50px_rgba(249,115,22,0.4)]">
+      
+      <!-- Close Modal Button -->
+      <button onclick="closePreviewModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-800 text-slate-400 hover:text-white flex items-center justify-center border border-slate-700">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-400/40 px-3 py-1 rounded-full text-xs font-bold text-orange-300">
+        <i class="fa-solid fa-gamepad"></i> HALLOWEEN GAMEPLAY SIMULATOR
+      </div>
+
+      <p class="text-[10px] text-slate-300">
+        Bóng Bí Ngô "Jack-O'-Lantern Beats" nhảy trên Gạch Bia Mộ Ma Thuật
+      </p>
+
+      <!-- CANVAS GAME ANIMATION -->
+      <div class="relative w-full h-64 bg-slate-950 rounded-2xl overflow-hidden border border-purple-800/60">
+        <canvas id="previewCanvas" class="w-full h-full"></canvas>
+        <div class="absolute bottom-2 left-2 text-[9px] font-mono text-purple-400/80 bg-black/60 px-2 py-0.5 rounded">
+          BPM: 140 • SYNTHWAVE EDM
+        </div>
+      </div>
+
+      <button onclick="closePreviewModal()" class="w-full py-2.5 bg-gradient-to-r from-orange-500 to-pink-600 text-white font-black font-orbitron text-xs rounded-xl shadow-lg hover:brightness-110 active:scale-95 transition">
+        ĐÓNG TRẢI NGHIỆM
+      </button>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE JAVASCRIPT CODE -->
+  <script>
+    // State management
+    let currentCandy = 1250;
+    let isCanvasRunning = false;
+    let animationFrameId = null;
+
+    // Countdown Timer logic
+    function startCountdown() {
+      let days = 6, hours = 23, mins = 45, secs = 12;
+      setInterval(() => {
+        secs--;
+        if (secs < 0) { secs = 59; mins--; }
+        if (mins < 0) { mins = 59; hours--; }
+        if (hours < 0) { hours = 23; days--; }
+
+        document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
+        document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+        document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
+      }, 1000);
+    }
+
+    // Switch Main Bottom Navigation Tabs
+    function switchMainTab(tab) {
+      const viewHub = document.getElementById('view-hub');
+      const viewShop = document.getElementById('view-shop');
+      const viewSocial = document.getElementById('view-social');
+
+      const tabHub = document.getElementById('tab-hub');
+      const tabShop = document.getElementById('tab-shop');
+      const tabSocial = document.getElementById('tab-social');
+
+      // Hide all views
+      viewHub.classList.add('hidden');
+      viewShop.classList.add('hidden');
+      viewSocial.classList.add('hidden');
+
+      // Reset tab colors
+      tabHub.className = "flex flex-col items-center gap-1 text-slate-500 hover:text-orange-400 transition-colors";
+      tabShop.className = "flex flex-col items-center gap-1 text-slate-500 hover:text-orange-400 transition-colors";
+      tabSocial.className = "flex flex-col items-center gap-1 text-slate-500 hover:text-purple-400 transition-colors";
+
+      if (tab === 'hub') {
+        viewHub.classList.remove('hidden');
+        tabHub.className = "flex flex-col items-center gap-1 text-orange-400 transition-colors";
+      } else if (tab === 'shop') {
+        viewShop.classList.remove('hidden');
+        tabShop.className = "flex flex-col items-center gap-1 text-orange-400 transition-colors";
+      } else if (tab === 'social') {
+        viewSocial.classList.remove('hidden');
+        tabSocial.className = "flex flex-col items-center gap-1 text-purple-400 transition-colors";
+      }
+    }
+
+    // Update Candy Currency UI
+    function updateCandyDisplay(amount) {
+      currentCandy += amount;
+      document.getElementById('user-candy-count').innerText = currentCandy.toLocaleString();
+      document.getElementById('progress-text').innerText = currentCandy.toLocaleString();
+
+      // Update progress bar percentage (max 2000)
+      const pct = Math.min(100, (currentCandy / 2000) * 100);
+      document.getElementById('progress-bar-fill').style.width = pct + '%';
+    }
+
+    // Claim Candy Milestone Rewards
+    function claimMilestone(nodeIndex) {
+      if (nodeIndex === 2) {
+        showToast("🎁 Đã nhận: Skin Gạch Bia Mộ Neon!");
+        const node = document.getElementById('node-2');
+        node.className = "w-8 h-8 rounded-full bg-purple-600 text-white text-xs flex items-center justify-center border border-purple-300 shadow-[0_0_8px_rgba(168,85,247,0.6)]";
+        node.innerHTML = '<i class="fa-solid fa-check"></i>';
+      } else if (nodeIndex === 1) {
+        showToast("ℹ️ Mốc này bạn đã nhận rồi!");
+      } else {
+        showToast("🔒 Bạn chưa đủ Kẹo để mở cột mốc này!");
+      }
+    }
+
+    // Simulate Playing a Track for Quests
+    function simulatePlayTrack(candyReward, btnId) {
+      showToast("🎶 Đang giả lập chơi bài hát EDM Halloween...");
+      const btn = document.getElementById(btnId);
+      btn.innerText = "ĐANG CHƠI...";
+      btn.disabled = true;
+
+      setTimeout(() => {
+        updateCandyDisplay(candyReward);
+        showToast(`🎉 Tăng +${candyReward} Kẹo Ma Quái!`);
+        btn.className = "px-3 py-1 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed";
+        btn.innerText = "ĐÃ NHẬN";
+      }, 1500);
+    }
+
+    // Buy Item in Candy Shop
+    function buyShopItem(cost, itemName) {
+      if (currentCandy >= cost) {
+        updateCandyDisplay(-cost);
+        showToast(`🎉 Đã đổi thành công: ${itemName}!`);
+      } else {
+        showToast("❌ Bạn không đủ Kẹo Ma Quái!");
+      }
+    }
+
+    // Send Gift to Friends
+    function sendFriendGift(friendName, btnId) {
+      showToast(`💌 Đã tặng 20 Kẹo cho ${friendName}!`);
+      const btn = document.getElementById(btnId);
+      btn.className = "px-3 py-1 bg-slate-800 text-slate-500 text-[10px] font-bold rounded-lg cursor-not-allowed";
+      btn.innerText = "ĐÃ TẶNG";
+      btn.disabled = true;
+    }
+
+    // Toast Notification System
+    function showToast(message) {
+      const toast = document.getElementById('toast-msg');
+      const toastText = document.getElementById('toast-text');
+
+      toastText.innerText = message;
+      toast.classList.remove('translate-y-12', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-12', 'opacity-0');
+      }, 2500);
+    }
+
+    // Canvas 2D Animated Gameplay Simulator (Hopping Pumpkin Ball)
+    function openPreviewModal() {
+      const modal = document.getElementById('modal-preview');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      initCanvasPreview();
+    }
+
+    function closePreviewModal() {
+      const modal = document.getElementById('modal-preview');
+      modal.classList.remove('opacity-100');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      isCanvasRunning = false;
+    }
+
+    function initCanvasPreview() {
+      const canvas = document.getElementById('previewCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Set canvas size based on parent container
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      let ballY = canvas.height / 2;
+      let ballX = canvas.width / 2;
+      let jumpPhase = 0;
+      let speed = 0.08;
+
+      // Tombstone Tiles data
+      const tiles = [
+        { x: canvas.width / 2 - 40, y: canvas.height - 60, w: 80, h: 25 },
+        { x: canvas.width / 2 - 50, y: canvas.height - 120, w: 100, h: 25 },
+        { x: canvas.width / 2 - 35, y: canvas.height - 180, w: 70, h: 25 },
+      ];
+
+      isCanvasRunning = true;
+
+      function render() {
+        if (!isCanvasRunning) return;
+
+        // Clear Background with Dark EDM Void Gradient
+        const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        grad.addColorStop(0, '#090514');
+        grad.addColorStop(1, '#1e0a38');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Perspective Equalizer Grid Lines
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.15)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < canvas.width; x += 20) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+        }
+
+        // Draw Tombstone Tiles
+        tiles.forEach((t, i) => {
+          ctx.fillStyle = '#2e1052';
+          ctx.strokeStyle = '#f97316';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.roundRect(t.x, t.y, t.w, t.h, 6);
+          ctx.fill();
+          ctx.stroke();
+
+          // Neon Glow on top of tiles
+          ctx.fillStyle = '#f97316';
+          ctx.shadowColor = '#f97316';
+          ctx.shadowBlur = 10;
+          ctx.fillRect(t.x + 5, t.y + 2, t.w - 10, 3);
+          ctx.shadowBlur = 0;
+        });
+
+        // Calculate Ball Bounce Physics (Sin wave)
+        jumpPhase += speed;
+        ballY = (canvas.height - 70) - Math.abs(Math.sin(jumpPhase)) * 90;
+
+        // Draw Fire Particle Trail behind Ball
+        ctx.fillStyle = 'rgba(168, 85, 247, 0.6)';
+        ctx.beginPath();
+        ctx.arc(ballX, ballY + 15, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw Glowing Neon Pumpkin Ball
+        ctx.fillStyle = '#f97316';
+        ctx.shadowColor = '#f97316';
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Draw Face on Pumpkin Ball
+        ctx.fillStyle = '#000';
+        ctx.font = '14px sans-serif';
+        ctx.fillText('🎃', ballX - 9, ballY + 5);
+
+        animationFrameId = requestAnimationFrame(render);
+      }
+
+      render();
+    }
+
+    // Initialize Page
+    window.onload = function() {
+      startCountdown();
+    };
+  </script>
+</body>
+</html>
